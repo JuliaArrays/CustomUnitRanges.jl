@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/timholy/CustomUnitRanges.jl.svg?branch=master)](https://travis-ci.org/timholy/CustomUnitRanges.jl)
 
-[![Coverage Status](https://coveralls.io/repos/timholy/CustomUnitRanges.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/timholy/CustomUnitRanges.jl?branch=master)
-
 [![codecov.io](http://codecov.io/github/timholy/CustomUnitRanges.jl/coverage.svg?branch=master)](http://codecov.io/github/timholy/CustomUnitRanges.jl?branch=master)
 
 This Julia package supports the creation of array types with
@@ -32,34 +30,38 @@ Currently this package defines two `AbstractUnitRange` types:
 Atypically, you should **not** exploit this with `using
 CustomUnitRanges`, and indeed that will throw an error:
 
-    julia> using CustomUnitRanges
-    ERROR: LoadError: InitError: Usage error:
-        include(Pkg.dir("CustomUnitRanges", "src", filename))
-    where `filename` corresponds to the type you want to use
+```jl
+julia> using CustomUnitRanges
+ERROR: LoadError: InitError: Usage error:
+    include(Pkg.dir("CustomUnitRanges", "src", filename))
+where `filename` corresponds to the type you want to use
 
-     in __init__() at /home/tim/.julia/v0.5/CustomUnitRanges/src/CustomUnitRanges.jl:4
-     ...
+ in __init__() at /home/tim/.julia/v0.5/CustomUnitRanges/src/CustomUnitRanges.jl:4
+ ...
+```
 
-The reason is that this package's range types should be *private* to
+The reason is that this package's range types should be **private** to
 the module that needs them; consequently you don't want to define a
 module in the global namespace.
 
 Instead, suppose you're defining an array type that supports arbitrary
 indices. In broad terms, your module might look like this:
 
-    module MyArrayType
+```jl
+module MyArrayType
 
-    include(Pkg.dir("CustomUnitRanges", "src", "URange.jl"))
+include(Pkg.dir("CustomUnitRanges", "src", "URange.jl"))
 
-    immutable MyArray{T,N} <: AbstractArray{T,N}
-        ...
-    end
-
-    indices(A::MyArray) = map(URange, #=starting indices=#, #=ending indices=#)
-
+immutable MyArray{T,N} <: AbstractArray{T,N}
     ...
+end
 
-    end
+indices(A::MyArray) = map(URange, #=starting indices=#, #=ending indices=#)
+
+...
+
+end
+```
 
 Here, the first line to note is the `include` statement, which will
 load (at source-level) the code for the `URange` type into your
@@ -74,9 +76,11 @@ The important result is that two packages, defining `MyArray` and
 `OtherArray`, can independently exploit `URange`.  If `MyArrayType`
 includes the specialization
 
-    function Base.similar(f::Union{Type,Function}, shape::Tuple{URange,Vararg{URange}}
-        MyArray(f(map(length, shape)), #=something for the offset=#)
-    end
+```jl
+function Base.similar(f::Union{Type,Function}, shape::Tuple{URange,Vararg{URange}}
+    MyArray(f(map(length, shape)), #=something for the offset=#)
+end
+```
 
 and similarly for `OtherArrayType`. Then, if `A` is a `MyArray` and
 `B` is an `OtherArray`,
