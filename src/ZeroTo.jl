@@ -1,6 +1,9 @@
 immutable ZeroTo{T<:Signed} <: AbstractUnitRange{T}
     stop::T
-    ZeroTo(stop) = new(max(T(-1), stop))
+    function ZeroTo(stop)
+        Base.depwarn("ZeroTo is deprecated, use ZeroRange instead", :ZeroTo)
+        new(max(T(-1), stop))
+    end
 end
 ZeroTo{T<:Signed}(stop::T) = ZeroTo{T}(stop)
 
