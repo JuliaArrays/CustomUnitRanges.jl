@@ -18,7 +18,7 @@ indices.
 
 Currently this package defines two `AbstractUnitRange` types:
 
-- `ZeroTo`, where `ZeroTo(n)` is the equivalent of `0:n`, except that
+- `ZeroRange`, where `ZeroRange(n)` is the equivalent of `0:n-1`, except that
   Julia's type system knows that the lower bound is 0. (This is
   analogous to `Base`'s `OneTo` type.) This is useful for defining
   arrays that are indexed starting with 0.
@@ -67,7 +67,7 @@ Here, the first line to note is the `include` statement, which will
 load (at source-level) the code for the `URange` type into your
 `MyArrayType` module.  We chose `"URange.jl"` because here we want
 arbitrary indices; had we wanted zero-based indices, we would have
-chosen `"ZeroTo.jl"` instead. Second, note that the output of
+chosen `"ZeroRange.jl"` instead. Second, note that the output of
 `indices` is a `URange` type. More specifically, it's creating a tuple
 of `MyArrayType.URange`---there is no "global" `URange` type, so the
 indices-tuple is therefore *specific to this package*.
