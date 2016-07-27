@@ -33,11 +33,6 @@ Base.done{T}(r::ZeroRange{T}, i) = i == oftype(i, r.len)
     convert(T, i-1)
 end
 
-@inline function Base.getindex{T}(r::ZeroRange{T}, s::ZeroRange)
-    @boundscheck s.len <= r.len || Base.throw_boundserror(r, s)
-    ZeroRange(T(s.len))
-end
-
 @inline function Base.getindex{T}(r::ZeroRange{T}, s::AbstractUnitRange)
     @boundscheck checkbounds(r, s)
     T(first(s)-1):T(last(s)-1)
@@ -51,15 +46,3 @@ Base.convert{T<:Real}(::Type{ZeroRange{T}}, r::ZeroRange{T}) = r
 Base.convert{T<:Real}(::Type{ZeroRange{T}}, r::ZeroRange) = ZeroRange{T}(r.len)
 
 Base.show(io::IO, r::ZeroRange) = print(io, typeof(r).name, "(", r.len, ")")
-
-import Base: +, -
-for f in (:+, :-)
-    @eval begin
-        function $f(r1::OrdinalRange, r2::OrdinalRange)
-            r1l = length(r1)
-            (r1l == length(r2) ||
-             throw(DimensionMismatch("argument dimensions must match")))
-            range($f(first(r1),first(r2)), $f(step(r1),step(r2)), r1l)
-        end
-    end
-end
