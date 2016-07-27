@@ -14,29 +14,7 @@ urange_last{T}(start::T, stop::T) =
 
 Base.start{T}(r::URange{T}) = oftype(r.start + one(T), r.start)
 
-@inline function Base.getindex{T}(v::URange{T}, i::Integer)
-    ret = convert(T, first(v) + i - 1)
-    @boundscheck ((i > 0) & (ret <= v.stop) & (ret >= v.start)) || Base.throw_boundserror(v, i)
-    ret
-end
-
-@inline function Base.getindex{T<:Integer}(r::URange, s::AbstractUnitRange{T})
-    @boundscheck checkbounds(r, s)
-    st = oftype(r.start, r.start + first(s)-1)
-    range(st, length(s))
-end
-
-Base.intersect{T<:Integer}(r::URange{T}, i::Integer) = intersect(i, r)
-
-function Base.findin{T1<:Integer, T2<:Integer}(r::URange{T1}, span::URange{T2})
-    ifirst, ilast = Base._findin(r, span)
-    URange(ifirst, ilast)
-end
-
-function Base.findin{T1<:Integer, T2<:Integer}(r::Range{T1}, span::URange{T2})
-    ifirst, ilast = Base._findin(r, span)
-    ifirst:1:ilast
-end
+Base.intersect{T1<:Integer,T2<:Integer}(r::URange{T1}, s::URange{T2}) = URange(max(first(r),first(s)), min(last(r),last(s)))
 
 Base.promote_rule{T1,T2}(::Type{URange{T1}},::Type{URange{T2}}) =
     URange{promote_type(T1,T2)}
@@ -45,6 +23,8 @@ Base.convert{T<:Real}(::Type{URange{T}}, r::URange) = URange{T}(r.start, r.stop)
 
 Base.promote_rule{T1,UR<:AbstractUnitRange}(::Type{URange{T1}}, ::Type{UR}) =
     URange{promote_type(T1,eltype(UR))}
+Base.promote_rule{T1,T2}(::Type{UnitRange{T2}}, ::Type{URange{T1}}) =
+    URange{promote_type(T1,T2)}
 Base.convert{T<:Real}(::Type{URange{T}}, r::AbstractUnitRange) = URange{T}(first(r), last(r))
 
 let smallint = (Int === Int64 ?
