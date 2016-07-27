@@ -1,10 +1,10 @@
-module ModZ
+module ModZT
 
 include(Pkg.dir("CustomUnitRanges", "src", "ZeroTo.jl"))
 
 end
 
-using ModZ: ZeroTo
+using ModZT: ZeroTo
 
 r = ZeroTo(-5)
 @test isempty(r)
@@ -37,4 +37,4 @@ end
 io = IOBuffer()
 show(io, r)
 str = takebuf_string(io)
-@test str == "ModZ.ZeroTo(3)"
+@test str == "ModZT.ZeroTo(3)"

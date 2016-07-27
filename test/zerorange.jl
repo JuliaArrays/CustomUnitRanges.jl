@@ -69,6 +69,7 @@ using ModZ: ZeroRange
 
     r = ZeroRange{Int16}(5)
     @test length(r) === 5
+    @test start(r) === 0
     k = -1
     for i in r
         @test i == (k+=1)
@@ -83,4 +84,6 @@ using ModZ: ZeroRange
     @test convert(ZeroRange{Int16}, ZeroRange(5)) === ZeroRange{Int16}(5)
     @test convert(ZeroRange{Int}, ZeroRange(5)) === ZeroRange(5)
     @test convert(UnitRange, ZeroRange(4)) === 0:3
+    r = ZeroRange(Int128(10))
+    @test length(r) === Int128(10)
 end
