@@ -1,6 +1,6 @@
 module ModU
 
-include(Pkg.dir("CustomUnitRanges", "src", "URange.jl"))
+include(joinpath(dirname(@__FILE__), "..", "src", "URange.jl"))
 
 end
 

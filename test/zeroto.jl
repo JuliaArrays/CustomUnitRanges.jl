@@ -1,6 +1,6 @@
 module ModZT
 
-include(Pkg.dir("CustomUnitRanges", "src", "ZeroTo.jl"))
+include(joinpath(dirname(@__FILE__), "..", "src", "ZeroTo.jl"))
 
 end
 
