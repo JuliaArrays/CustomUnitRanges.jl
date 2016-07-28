@@ -27,22 +27,11 @@ Currently this package defines two `AbstractUnitRange` types:
 
 # Usage
 
-Atypically, you should **not** exploit this with `using
-CustomUnitRanges`, and indeed that will throw an error:
-
-```jl
-julia> using CustomUnitRanges
-ERROR: LoadError: InitError: Usage error:
-    include(Pkg.dir("CustomUnitRanges", "src", filename))
-where `filename` corresponds to the type you want to use
-
- in __init__() at /home/tim/.julia/v0.5/CustomUnitRanges/src/CustomUnitRanges.jl:4
- ...
-```
-
-The reason is that this package's range types should be **private** to
-the module that needs them; consequently you don't want to define a
-module in the global namespace.
+This package has a somewhat atypical usage: you should `include` files
+from this repository at the source level. The reason is that this
+package's range types should be **private** to the module that needs
+them; consequently you don't want to define a module in the global
+namespace.
 
 Instead, suppose you're defining an array type that supports arbitrary
 indices. In broad terms, your module might look like this:
@@ -50,7 +39,8 @@ indices. In broad terms, your module might look like this:
 ```jl
 module MyArrayType
 
-include(Pkg.dir("CustomUnitRanges", "src", "URange.jl"))
+using CustomUnitRanges: filename_for_urange
+include(filename_for_urange)
 
 immutable MyArray{T,N} <: AbstractArray{T,N}
     ...
@@ -63,14 +53,21 @@ indices(A::MyArray) = map(URange, #=starting indices=#, #=ending indices=#)
 end
 ```
 
-Here, the first line to note is the `include` statement, which will
-load (at source-level) the code for the `URange` type into your
-`MyArrayType` module.  We chose `"URange.jl"` because here we want
-arbitrary indices; had we wanted zero-based indices, we would have
-chosen `"ZeroRange.jl"` instead. Second, note that the output of
-`indices` is a `URange` type. More specifically, it's creating a tuple
-of `MyArrayType.URange`---there is no "global" `URange` type, so the
-indices-tuple is therefore *specific to this package*.
+Here,
+```
+using CustomUnitRanges: filename_for_urange
+```
+
+brings a non-exported string, `filename_for_urange`, into the scope of
+`MyArrayType`. The key line is the `include(filename_for_urange)`
+statement, which will load (at source-level) the code for the `URange`
+type into your `MyArrayType` module.  We chose `"URange.jl"` because
+here we want arbitrary indices; had we wanted zero-based indices, we
+would have chosen `"ZeroRange.jl"` instead. Second, note that the
+output of `indices` is a `URange` type. More specifically, it's
+creating a tuple of `MyArrayType.URange`---there is no "global"
+`URange` type, so the indices-tuple is therefore *specific to this
+package*.
 
 The important result is that two packages, defining `MyArray` and
 `OtherArray`, can independently exploit `URange`.  If `MyArrayType`

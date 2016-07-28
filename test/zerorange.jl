@@ -1,6 +1,7 @@
 module ModZ
 
-include(joinpath(dirname(@__FILE__), "..", "src", "ZeroRange.jl"))
+using CustomUnitRanges: filename_for_zerorange
+include(filename_for_zerorange)
 
 end
 
