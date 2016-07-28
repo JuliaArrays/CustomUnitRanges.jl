@@ -1,11 +1,6 @@
 module CustomUnitRanges
 
-function __init__()
-    error("""
-Usage error:
-    include(Pkg.dir(\"CustomUnitRanges\", \"src\", filename))
-where `filename` corresponds to the type you want to use
-""")
-end
+filename_for_urange = joinpath(dirname(@__FILE__), "URange.jl")
+filename_for_zerorange = joinpath(dirname(@__FILE__), "ZeroRange.jl")
 
 end # module

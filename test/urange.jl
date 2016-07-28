@@ -1,6 +1,7 @@
 module ModU
 
-include(joinpath(dirname(@__FILE__), "..", "src", "URange.jl"))
+using CustomUnitRanges: filename_for_urange
+include(filename_for_urange)
 
 end
 
