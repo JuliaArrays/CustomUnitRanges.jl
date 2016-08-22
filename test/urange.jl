@@ -49,6 +49,7 @@ using ModU: URange
             @test r[9] == 3
             @test_throws BoundsError r[10]
             @test_throws BoundsError r[0]
+            @test r[2:8] === URange(T(-4), T(2))
             @test r+1 === -T(4):T(4)
             @test 2*r === -T(10):T(2):T(6)
             k = -6
