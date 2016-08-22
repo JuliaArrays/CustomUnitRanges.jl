@@ -16,6 +16,13 @@ Base.start{T}(r::URange{T}) = oftype(r.start + one(T), r.start)
 
 Base.intersect{T1<:Integer,T2<:Integer}(r::URange{T1}, s::URange{T2}) = URange(max(first(r),first(s)), min(last(r),last(s)))
 
+@inline function Base.getindex{R,S<:Integer}(r::URange{R}, s::AbstractUnitRange{S})
+    @boundscheck checkbounds(r, s)
+    f = first(r)
+    strt = f + first(s) - 1
+    URange{R}(strt, strt+length(s)-1)
+end
+
 Base.promote_rule{T1,T2}(::Type{URange{T1}},::Type{URange{T2}}) =
     URange{promote_type(T1,T2)}
 Base.convert{T<:Real}(::Type{URange{T}}, r::URange{T}) = r

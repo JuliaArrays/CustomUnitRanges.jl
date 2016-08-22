@@ -33,9 +33,9 @@ Base.done{T}(r::ZeroRange{T}, i) = i == oftype(i, r.len)
     convert(T, i-1)
 end
 
-@inline function Base.getindex{T}(r::ZeroRange{T}, s::AbstractUnitRange)
+@inline function Base.getindex{R,S<:Integer}(r::ZeroRange{R}, s::AbstractUnitRange{S})
     @boundscheck checkbounds(r, s)
-    T(first(s)-1):T(last(s)-1)
+    R(first(s)-1):R(last(s)-1)
 end
 
 Base.intersect(r::ZeroRange, s::ZeroRange) = ZeroRange(min(r.len,s.len))
