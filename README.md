@@ -1,8 +1,8 @@
 # CustomUnitRanges
 
-[![Build Status](https://travis-ci.org/timholy/CustomUnitRanges.jl.svg?branch=master)](https://travis-ci.org/timholy/CustomUnitRanges.jl)
+[![Build Status](https://travis-ci.org/JuliaArrays/CustomUnitRanges.jl.svg?branch=master)](https://travis-ci.org/JuliaArrays/CustomUnitRanges.jl)
 
-[![codecov.io](http://codecov.io/github/timholy/CustomUnitRanges.jl/coverage.svg?branch=master)](http://codecov.io/github/timholy/CustomUnitRanges.jl?branch=master)
+[![codecov.io](http://codecov.io/github/JuliaArrays/CustomUnitRanges.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaArrays/CustomUnitRanges.jl?branch=master)
 
 This Julia package supports the creation of array types with
 "unconventional" indices, i.e., when the indices may not start at 1.
