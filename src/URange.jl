@@ -1,7 +1,7 @@
 immutable URange{T<:Real} <: AbstractUnitRange{T}
     start::T
     stop::T
-    URange(start, stop) = new(start, urange_last(start,stop))
+    (::Type{URange{T}}){T}(start, stop) = new{T}(start, urange_last(start,stop))
 end
 URange{T<:Real}(start::T, stop::T) = URange{T}(start, stop)
 

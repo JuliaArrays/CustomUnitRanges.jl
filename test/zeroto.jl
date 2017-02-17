@@ -34,7 +34,4 @@ end
 @test intersect(r, ZeroTo(2)) == ZeroTo(2)
 @test intersect(r, -1:5) == 0:3
 @test intersect(r, 2:5) == 2:3
-io = IOBuffer()
-show(io, r)
-str = takebuf_string(io)
-@test str == "ModZT.ZeroTo(3)"
+@test string(r) == "ModZT.ZeroTo(3)"

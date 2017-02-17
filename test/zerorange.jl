@@ -38,10 +38,7 @@ using ModZ: ZeroRange
     @test intersect(r, ZeroRange(2)) === intersect(ZeroRange(2), r) === ZeroRange(2)
     @test intersect(r, -1:5) === intersect(-1:5, r) === 0:2
     @test intersect(r, 2:5) === intersect(2:5, r) === 2:2
-    io = IOBuffer()
-    show(io, r)
-    str = takebuf_string(io)
-    @test str == "ModZ.ZeroRange(3)"
+    @test string(r) == "ModZ.ZeroRange(3)"
 
     r = ZeroRange(5)
     @test checkindex(Bool, r, 4)
@@ -66,7 +63,7 @@ using ModZ: ZeroRange
     @test (5:2:13)-r == 5:9
     @test -r == 0:-1:-4
     @test reverse(r) == 4:-1:0
-    @test r./2 == 0:0.5:2
+    @test r/2 == 0:0.5:2
 
     r = ZeroRange{Int16}(5)
     @test length(r) === 5

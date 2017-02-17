@@ -77,10 +77,7 @@ using ModU: URange
             @test convert(URange{Int16}, r) === URange{Int16}(-5, 3)
             @test x === r
             @test y === URange(T(1),T(3))
-            io = IOBuffer()
-            show(io, r)
-            str = takebuf_string(io)
-            @test str == "ModU.URange(-$(T(5)),$(T(3)))"
+            @test string(r) == "ModU.URange(-$(T(5)),$(T(3)))"
         end
     end
 
