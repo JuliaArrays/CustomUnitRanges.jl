@@ -7,7 +7,7 @@ zero by Julia's type system.
 """
 immutable ZeroRange{T<:Integer} <: AbstractUnitRange{T}
     len::T
-    ZeroRange(len) = new(max(zero(T), len))
+    (::Type{ZeroRange{T}}){T}(len) = new{T}(max(zero(T), len))
 end
 ZeroRange{T<:Integer}(len::T) = ZeroRange{T}(len)
 
