@@ -1,47 +1,47 @@
-immutable ZeroTo{T<:Signed} <: AbstractUnitRange{T}
+struct ZeroTo{T<:Signed} <: AbstractUnitRange{T}
     stop::T
-    function (::Type{ZeroTo{T}}){T}(stop)
+    function ZeroTo{T}(stop) where T
         Base.depwarn("ZeroTo is deprecated, use ZeroRange instead", :ZeroTo)
         new{T}(max(T(-1), stop))
     end
 end
-ZeroTo{T<:Signed}(stop::T) = ZeroTo{T}(stop)
+ZeroTo(stop::T) where {T<:Signed} = ZeroTo{T}(stop)
 
 Base.length(r::ZeroTo) = r.stop+1
 
-Base.length{T<:Union{Int,Int64}}(r::ZeroTo{T}) = T(r.stop+1)
+Base.length(r::ZeroTo{T}) where {T<:Union{Int,Int64}} = T(r.stop+1)
 
 let smallint = (Int === Int64 ?
                 Union{Int8,UInt8,Int16,UInt16,Int32,UInt32} :
                 Union{Int8,UInt8,Int16,UInt16})
-    Base.length{T <: smallint}(r::ZeroTo{T}) = Int(r.stop)+1
-    Base.start{T<:smallint}(r::ZeroTo{T}) = 0
+    Base.length(r::ZeroTo{T}) where {T <: smallint} = Int(r.stop)+1
+    Base.start(r::ZeroTo{T}) where {T<:smallint} = 0
 end
 
-Base.first{T}(r::ZeroTo{T}) = zero(T)
+Base.first(r::ZeroTo{T}) where {T} = zero(T)
 
-Base.start{T}(r::ZeroTo{T}) = zero(T)
+Base.start(r::ZeroTo{T}) where {T} = zero(T)
 
-@inline function Base.getindex{T}(v::ZeroTo{T}, i::Integer)
+@inline function Base.getindex(v::ZeroTo{T}, i::Integer) where T
     @boundscheck ((i > 0) & (i <= length(v))) || Base.throw_boundserror(v, i)
     convert(T, i-1)
 end
 
-@inline function Base.getindex{T}(r::ZeroTo{T}, s::ZeroTo)
+@inline function Base.getindex(r::ZeroTo{T}, s::ZeroTo) where T
     @boundscheck checkbounds(r, s)
     ZeroTo(T(s.stop))
 end
 
-@inline function Base.getindex{T}(r::ZeroTo{T}, s::AbstractUnitRange)
+@inline function Base.getindex(r::ZeroTo{T}, s::AbstractUnitRange) where T
     @boundscheck checkbounds(r, s)
     T(first(s)-1):T(last(s)-1)
 end
 
 Base.intersect(r::ZeroTo, s::ZeroTo) = ZeroTo(min(r.stop,s.stop))
 
-Base.promote_rule{T1,T2}(::Type{ZeroTo{T1}},::Type{ZeroTo{T2}}) =
+Base.promote_rule(::Type{ZeroTo{T1}},::Type{ZeroTo{T2}}) where {T1,T2} =
     ZeroTo{promote_type(T1,T2)}
-Base.convert{T<:Real}(::Type{ZeroTo{T}}, r::ZeroTo{T}) = r
-Base.convert{T<:Real}(::Type{ZeroTo{T}}, r::ZeroTo) = ZeroTo{T}(r.stop)
+Base.convert(::Type{ZeroTo{T}}, r::ZeroTo{T}) where {T<:Real} = r
+Base.convert(::Type{ZeroTo{T}}, r::ZeroTo) where {T<:Real} = ZeroTo{T}(r.stop)
 
 Base.show(io::IO, r::ZeroTo) = print(io, typeof(r).name, "(", r.stop, ")")
