@@ -5,7 +5,7 @@ include(filename_for_urange)
 
 end
 
-using ModU: URange
+using .ModU: URange
 
 @testset "URange" begin
     @testset "Bool" begin
@@ -50,7 +50,7 @@ using ModU: URange
             @test_throws BoundsError r[10]
             @test_throws BoundsError r[0]
             @test r[2:8] === URange(T(-4), T(2))
-            @test r+1 === -T(4):T(4)
+            @test r .+ 1 === -T(4):T(4)
             @test 2*r === -T(10):T(2):T(6)
             k = -6
             for i in r
@@ -69,15 +69,15 @@ using ModU: URange
                 @test intersect(r, 2) == intersect(2, r) == [2.0]
                 @test intersect(r, 7) == intersect(7, r) == Float64[]
             end
-            @test findin(r, 0:5) == (T<:Integer ? (6:9) : collect(6:9))
-            @test findin(r, URange(0,5)) == (T<:Integer ? (6:9) : collect(6:9))
+            @test findall(in(0:5), r) == (T<:Integer ? (6:9) : collect(6:9))
+            @test findall(in(URange(0,5)), r) == (T<:Integer ? (6:9) : collect(6:9))
             x, y = promote(r, 1:3)
             @test convert(URange{Int16}, 0:3) === URange{Int16}(0,3)
             @test convert(URange{Int16}, Base.OneTo(5)) === URange{Int16}(1,5)
             @test convert(URange{Int16}, r) === URange{Int16}(-5, 3)
             @test x === r
             @test y === URange(T(1),T(3))
-            @test string(r) == "ModU.URange(-$(T(5)),$(T(3)))"
+            @test string(r) == "URange(-$(T(5)),$(T(3)))"
         end
     end
 
