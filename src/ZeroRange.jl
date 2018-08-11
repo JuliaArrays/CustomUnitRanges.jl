@@ -18,15 +18,21 @@ Base.length(r::ZeroRange{T}) where {T<:Union{Int,Int64}} = T(r.len)
 let smallint = (Int === Int64 ?
                 Union{Int8,UInt8,Int16,UInt16,Int32,UInt32} :
                 Union{Int8,UInt8,Int16,UInt16})
-    Base.length(r::ZeroRange{T}) where {T <: smallint} = Int(r.len)
-    Base.start(r::ZeroRange{T}) where {T<:smallint} = 0
+    Base.length(r::ZeroRange{T}) where {T<:smallint} = Int(r.len)
 end
 
 Base.first(r::ZeroRange{T}) where {T} = zero(T)
-Base.last(r::ZeroRange{T}) where { T} = r.len-one(T)
+Base.last(r::ZeroRange{T})  where {T} = r.len-one(T)
 
-Base.start(r::ZeroRange{T}) where {T} = oftype(one(T)+one(T), zero(T))
-Base.done(r::ZeroRange{T}, i) where {T} = i == oftype(i, r.len)
+function Base.iterate(r::ZeroRange{T}) where T
+    r.len <= 0 && return nothing
+    x = oftype(one(T) + one(T), zero(T))
+    return (x,x)
+end
+function Base.iterate(r::ZeroRange{T}, i) where T
+    x = i + one(T)
+    return (x >= oftype(x, r.len) ? nothing : (x,x))
+end
 
 @inline function Base.getindex(v::ZeroRange{T}, i::Integer) where T
     @boundscheck ((i > 0) & (i <= length(v))) || Base.throw_boundserror(v, i)
@@ -44,5 +50,6 @@ Base.promote_rule(::Type{ZeroRange{T1}},::Type{ZeroRange{T2}}) where {T1,T2} =
     ZeroRange{promote_type(T1,T2)}
 Base.convert(::Type{ZeroRange{T}}, r::ZeroRange{T}) where {T<:Real} = r
 Base.convert(::Type{ZeroRange{T}}, r::ZeroRange) where {T<:Real} = ZeroRange{T}(r.len)
+ZeroRange{T}(r::ZeroRange) where {T} = convert(ZeroRange{T}, r)
 
 Base.show(io::IO, r::ZeroRange) = print(io, typeof(r).name, "(", r.len, ")")

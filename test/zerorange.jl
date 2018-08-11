@@ -32,7 +32,8 @@ using .ModZ: ZeroRange
     @test 2*r === 0:2:4
     k = -1
     for i in r
-        @test i == (k+=1)
+        j = (k+=1)
+        @test i == j
     end
     @test k == length(r)-1
     @test intersect(r, ZeroRange(2)) === intersect(ZeroRange(2), r) === ZeroRange(2)
@@ -67,10 +68,11 @@ using .ModZ: ZeroRange
 
     r = ZeroRange{Int16}(5)
     @test length(r) === 5
-    @test start(r) === 0
+    @test iterate(r) == (0,0)
     k = -1
     for i in r
-        @test i == (k+=1)
+        j = (k+=1)
+        @test i == j
     end
     @test k == length(r)-1
     x, y = promote(ZeroRange(5), ZeroRange{Int16}(8))
