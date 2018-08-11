@@ -3,11 +3,9 @@ language: julia
 os:
   - linux
 julia:
+  - 0.7
   - 1.0
   - nightly
-matrix:
-  allow_failures:
-    - julia: nightly
 notifications:
   email: false
 # uncomment the following lines to override the default test script
@@ -16,4 +14,4 @@ notifications:
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("CustomUnitRanges"); Pkg.test("CustomUnitRanges"; coverage=true)'
 after_success:
   # push coverage results to Codecov
-  - julia -e 'cd(Pkg.dir("CustomUnitRanges")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'using Pkg, CustomUnitRanges; cd(joinpath(pathof(CustomUnitRanges), "..")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
