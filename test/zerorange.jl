@@ -5,7 +5,7 @@ include(filename_for_zerorange)
 
 end
 
-using ModZ: ZeroRange
+using .ModZ: ZeroRange
 
 @testset "ZeroRange" begin
     r = ZeroRange(-5)
@@ -28,17 +28,18 @@ using ModZ: ZeroRange
     @test_throws BoundsError r[-1]
     @test r[1:3] === 0:2
     @test_throws BoundsError r[r]
-    @test r+1 === 1:3
+    @test r .+ 1 === 1:3
     @test 2*r === 0:2:4
     k = -1
     for i in r
-        @test i == (k+=1)
+        j = (k+=1)
+        @test i == j
     end
     @test k == length(r)-1
     @test intersect(r, ZeroRange(2)) === intersect(ZeroRange(2), r) === ZeroRange(2)
     @test intersect(r, -1:5) === intersect(-1:5, r) === 0:2
     @test intersect(r, 2:5) === intersect(2:5, r) === 2:2
-    @test string(r) == "ModZ.ZeroRange(3)"
+    @test string(r) == "ZeroRange(3)"
 
     r = ZeroRange(5)
     @test checkindex(Bool, r, 4)
@@ -67,10 +68,11 @@ using ModZ: ZeroRange
 
     r = ZeroRange{Int16}(5)
     @test length(r) === 5
-    @test start(r) === 0
+    @test iterate(r) == (0,0)
     k = -1
     for i in r
-        @test i == (k+=1)
+        j = (k+=1)
+        @test i == j
     end
     @test k == length(r)-1
     x, y = promote(ZeroRange(5), ZeroRange{Int16}(8))

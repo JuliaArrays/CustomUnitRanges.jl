@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 
 include("zerorange.jl")
 include("urange.jl")

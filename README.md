@@ -42,7 +42,7 @@ module MyArrayType
 using CustomUnitRanges: filename_for_urange
 include(filename_for_urange)
 
-immutable MyArray{T,N} <: AbstractArray{T,N}
+struct MyArray{T,N} <: AbstractArray{T,N}
     ...
 end
 
