@@ -7,7 +7,7 @@
 This Julia package supports the creation of array types with
 "unconventional" indices, i.e., when the indices may not start at 1.
 With this package, each custom array type can have a corresponding
-`indices` range type, consequently providing a means for consistency
+`axes` range type, consequently providing a means for consistency
 in allocation by `similar`.
 
 See http://docs.julialang.org/en/latest/devdocs/offset-arrays.html for
@@ -36,7 +36,7 @@ namespace.
 Instead, suppose you're defining an array type that supports arbitrary
 indices. In broad terms, your module might look like this:
 
-```jl
+```julia
 module MyArrayType
 
 using CustomUnitRanges: filename_for_urange
@@ -46,7 +46,7 @@ struct MyArray{T,N} <: AbstractArray{T,N}
     ...
 end
 
-indices(A::MyArray) = map(URange, #=starting indices=#, #=ending indices=#)
+Base.axes(A::MyArray) = Base.Slice.(map(URange, #=starting indices=#, #=ending indices=#))
 
 ...
 
@@ -64,8 +64,8 @@ statement, which will load (at source-level) the code for the `URange`
 type into your `MyArrayType` module.  We chose `"URange.jl"` because
 here we want arbitrary indices; had we wanted zero-based indices, we
 would have chosen `"ZeroRange.jl"` instead. Second, note that the
-output of `indices` is a `URange` type. More specifically, it's
-creating a tuple of `MyArrayType.URange`---there is no "global"
+output of `axes` is a `Slice` containing a `URange` type. More specifically, it's
+creating a tuple of slices with `MyArrayType.URange`---there is no "global"
 `URange` type, so the indices-tuple is therefore *specific to this
 package*.
 
@@ -82,7 +82,7 @@ end
 and similarly for `OtherArrayType`. Then, if `A` is a `MyArray` and
 `B` is an `OtherArray`,
 
-- `similar(Array{Int}, indices(A))` will create another `MyArray`
-- `similar(Array{Int}, indices(B))` will create another `OtherArray`
+- `similar(Array{Int}, axes(A))` will create another `MyArray`
+- `similar(Array{Int}, axes(B))` will create another `OtherArray`
 
 despite the fact that they both use `URange`.
