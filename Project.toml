@@ -1,0 +1,13 @@
+name = "CustomUnitRanges"
+uuid = "dc8bdbbb-1ca9-579f-8c36-e416f6a65cce"
+author = ["Tim Holy <tim.holy@gmail.com>"]
+version = "1.0.0"
+
+[compat]
+julia = "0.7, 1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
