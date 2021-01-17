@@ -52,4 +52,4 @@ Base.convert(::Type{ZeroRange{T}}, r::ZeroRange{T}) where {T<:Real} = r
 Base.convert(::Type{ZeroRange{T}}, r::ZeroRange) where {T<:Real} = ZeroRange{T}(r.len)
 ZeroRange{T}(r::ZeroRange) where {T} = convert(ZeroRange{T}, r)
 
-Base.show(io::IO, r::ZeroRange) = print(io, typeof(r).name, "(", r.len, ")")
+Base.show(io::IO, r::ZeroRange) = print(io, typeof(r).name.name, "(", r.len, ")")
