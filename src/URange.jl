@@ -43,4 +43,4 @@ Base.promote_rule(::Type{UnitRange{T2}}, ::Type{URange{T1}}) where {T1,T2} =
 Base.convert(::Type{URange{T}}, r::AbstractUnitRange) where {T<:Real} = URange{T}(first(r), last(r))
 URange{T}(r::AbstractUnitRange) where {T} = convert(Type{URange{T}}, r)
 
-Base.show(io::IO, r::URange) = print(io, typeof(r).name, '(', repr(first(r)), ',', repr(last(r)), ')')
+Base.show(io::IO, r::URange) = print(io, typeof(r).name.name, '(', repr(first(r)), ',', repr(last(r)), ')')
