@@ -51,7 +51,7 @@ using .ModU: URange
             @test_throws BoundsError r[0]
             @test r[2:8] === URange(T(-4), T(2))
             @test r .+ 1 === -T(4):T(4)
-            @test 2*r === -T(10):T(2):T(6)
+            @test T(2)*r === T(1)*(-T(10):T(2):T(6))
             k = -6
             for i in r
                 @test i == (k+=1)

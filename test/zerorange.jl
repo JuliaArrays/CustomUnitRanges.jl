@@ -29,7 +29,7 @@ using .ModZ: ZeroRange
     @test r[1:3] === 0:2
     @test_throws BoundsError r[r]
     @test r .+ 1 === 1:3
-    @test 2*r === 0:2:4
+    @test 2*r === 1*(0:2:4)
     k = -1
     for i in r
         j = (k+=1)
