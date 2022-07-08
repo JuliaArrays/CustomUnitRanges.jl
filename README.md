@@ -10,7 +10,7 @@ With this package, each custom array type can have a corresponding
 `axes` range type, consequently providing a means for consistency
 in allocation by `similar`.
 
-See http://docs.julialang.org/en/latest/devdocs/offset-arrays.html for
+See https://docs.julialang.org/en/v1/devdocs/offset-arrays/ for
 more information about defining and using array types with non-1
 indices.
 
